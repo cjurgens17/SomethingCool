@@ -1,0 +1,16 @@
+{
+  "name": "services",
+  "type": "module",
+  "version": "1.0.0",
+  "description" : "An OOP project",
+  "main": "jobs.js",
+  "scripts": {
+    "start": "node jobs.js"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    
+  }
+}
