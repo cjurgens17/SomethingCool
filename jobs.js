@@ -1,4 +1,4 @@
-import  { State, Type, Service }  from './services/index.mjs';
+import  { State, Type, Service, Reader }  from './services/index.mjs';
 
 
 function createJobs(types){
@@ -18,4 +18,51 @@ const allStates = createJobs(jobs);
 allStates.forEach((state) => {
     console.log('state: ', state);
 });
+
+
+let data = {
+name: 'chris',
+lastName:'Jurgens',
+age: 27,
+occupation: 'Developer',
+info: {
+    color: 'white',
+    height: 'tall',
+    moreInfo: {
+        sex: 'male',
+        ID: 1234,
+        evenMore: {
+            howMuch: 'a lot'
+        }
+      }
+},
+layers: {
+    more: 'info',
+    info: {
+        more: 'pokemon',
+        seven: {
+            number: 7
+        }
+    }
+}
+}
+
+let oneLayer = {
+    name: 'chris'
+}
+
+let test = new Reader(data);
+test.print();
+let layers = test.layers();
+let max = test.deepestLayer();
+let test2 = new Reader(oneLayer);
+console.log(layers);
+console.log(max);
+
+console.log(test2.deepestLayer());
+console.log(test2.layers());
+
+
+
+
 
