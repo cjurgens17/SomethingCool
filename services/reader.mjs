@@ -16,7 +16,6 @@ export class Reader {
     if (typeof name !== "string") {
       throw new Error("Name must be of type string");
     } else {
-      console.log("From Reader: " + name.toUpperCase());
       console.log(this.object);
     }
   }
@@ -155,39 +154,135 @@ export class Reader {
     }
     return false;
   }
-  //returns a key or group of keys from a inputting a specific value within an object. amount is the number of keys looking for
-  getKey(value, amount = 1){
-    if (arguments.length > 1) throw new Error("Exceeded argument limit");
+  //returns a key or group of keys from a inputting a specific value. Amount is the number of keys looking to get
+  //Example someReader.getKey('hello', 2): would return an array of two keys if so many existed, else would return just one or none if none existed.
+  getKey(value, amount = 1) {
+    if (arguments.length > 2) throw new Error("Exceeded argument limit");
     let entries = Object.entries(this.object);
-    if (entries.length < 1) return 'Associated Value has no key';
+    if (entries.length < 1) return "Associated Value has no key";
     //for nested layers
     //sub-procedure
     const goIntoLayer = (object) => {
       let entries = Object.entries(object);
       for (let entry of entries) {
         if (entry[1] === value) {
-          resultingKey = entry[0];
+          resultingKey.push(entry[0]);
+          ++matchAmount;
+        }
+
+        if (matchAmount === amount) {
           return;
         }
 
         if (typeof entry[1] === "object") {
-          goIntoLayer(entry[1])
+          goIntoLayer(entry[1]);
         }
       }
       return;
     };
-    let resultingKey;
+
+    let resultingKey = [];
+    let matchAmount = 0;
     //for main/1st layer
     for (let entry of entries) {
+      if (matchAmount === amount) return resultingKey;
       if (entry[1] === value) {
-        resultingKey = entry[0];
-        return resultingKey;
+          resultingKey.push(entry[0]);
+          ++matchAmount;
+        if (matchAmount === amount) {
+          return resultingKey;
+        }
       }
 
       if (typeof entry[1] === "object") {
         goIntoLayer(entry[1]);
       }
     }
-    return resultingKey === undefined ? 'Associated Value has no key' : resultingKey;
+    return resultingKey === undefined
+      ? "Associated Value has no key"
+      : resultingKey;
+  }
+  //gets value/values based on input key and number to return. Deafults to one.
+  getValue(key, amount = 1) {
+    if (arguments.length > 2) throw new Error("Exceeded argument limit");
+    let entries = Object.entries(this.object);
+    if (entries.length < 1) return "Associated Value has no key";
+    //for nested layers
+    //sub-procedure
+    const goIntoLayer = (object) => {
+      let entries = Object.entries(object);
+      for (let entry of entries) {
+        if (entry[0] === key) {
+          resultingKey.push(entry[1]);
+          ++matchAmount;
+        }
+
+        if (matchAmount === amount) {
+          return;
+        }
+
+        if (typeof entry[1] === "object") {
+          goIntoLayer(entry[1]);
+        }
+      }
+      return;
+    };
+
+    let resultingKey = [];
+    let matchAmount = 0;
+    //for main/1st layer
+    for (let entry of entries) {
+      if (matchAmount === amount) return resultingKey;
+      if (entry[0] === key) {
+          resultingKey.push(entry[1]);
+          ++matchAmount;
+        if (matchAmount === amount) {
+          return resultingKey;
+        }
+      }
+
+      if (typeof entry[1] === "object") {
+        goIntoLayer(entry[1]);
+      }
+    }
+    return resultingKey === undefined
+      ? "Associated Value has no key"
+      : resultingKey;
+  }
+
+  //This returns all the values nested or otherwise associated with the first result of a key specified.
+  provide(key) {
+    if (arguments.length > 1) throw new Error("Exceeded argument length");
+    let result = {};
+    let entries = Object.entries(this.object);
+
+    const goIntoLayer = (object) => {
+      for (let entry of object) {
+        if (entry[0] === key) {
+          result.key = entry[1];
+          return;
+        }
+
+        if (entry[1] === "object") {
+          goIntoLayer(entry[1]);
+        }
+      }
+    };
+
+    for (let entry of entries) {
+      if (result.key) {
+        return result;
+      }
+
+      if (entry[0] === key) {
+        result.key = entry[1];
+        return result;
+      }
+
+      if (entry[1] === "object") {
+      }
+    }
+
+    return Object.keys(result).length === 0 ? "No keys found" : result;
   }
 }

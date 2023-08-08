@@ -2,15 +2,14 @@
   "name": "services",
   "type": "module",
   "version": "1.0.0",
-  "description" : "An OOP project",
+  "description": "A Reader class to help work with Objects",
   "main": "jobs.js",
   "scripts": {
-    "start": "node jobs.js"
-  },
-  "dependencies": {
-
+    "start": "node jobs.js",
+    "test": "jest"
   },
   "devDependencies": {
-    
+    "@jest/globals": "^29.6.2",
+    "jest": "^29.6.2"
   }
 }

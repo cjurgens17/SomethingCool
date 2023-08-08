@@ -30,6 +30,7 @@ info: {
     height: 'tall',
     moreInfo: {
         sex: 'male',
+        guy: 'male',
         ID: 1234,
         evenMore: {
             howMuch: 'a lot'
@@ -57,10 +58,13 @@ let test = new Reader(data);
 // console.log(test.hasKey("evenMore"));
 // console.log('values');
 // console.log(test.hasValue('name'));
-console.log(test.getKey('pokemon'));
-console.log(test.getKey(7));
-console.log(test.getKey('Developer'));
-console.log(test.getKey('male'));
+// console.log(test.getKey('pokemon'));
+// console.log(test.getKey(7));
+// console.log(test.getKey('Developer'));
+// console.log(test.getKey('male', ));
+// console.log(test.getValue('more'));
+let layers = test.provide('layers');
+
 
 
 
