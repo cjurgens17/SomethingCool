@@ -30,7 +30,7 @@ export class Reader {
     const goIntoLayer = (object, counter) => {
       let entries = Object.entries(object);
       for (let entry of entries) {
-        if (typeof entry[1] === "object") {
+        if (typeof entry[1] === "object" && !Array.isArray(entry[1])) {
           counter = goIntoLayer(entry[1], ++counter);
         }
       }
@@ -41,7 +41,7 @@ export class Reader {
     let counter = 1;
     //for main/1st layer
     for (let entry of entries) {
-      if (typeof entry[1] === "object") {
+      if (typeof entry[1] === "object" && !Array.isArray(entry[1])) {
         counter = goIntoLayer(entry[1], ++counter);
       }
     }
@@ -58,7 +58,7 @@ export class Reader {
     const goIntoLayer = (object, counter, layers) => {
       let entries = Object.entries(object);
       for (let entry of entries) {
-        if (typeof entry[1] === "object") {
+        if (typeof entry[1] === "object" && !Array.isArray(entry[1])) {
           counter = goIntoLayer(entry[1], ++counter, ++layers);
         }
       }
@@ -71,7 +71,7 @@ export class Reader {
     let maxDepth = 1;
     //for main/1st layer
     for (let entry of entries) {
-      if (typeof entry[1] === "object") {
+      if (typeof entry[1] === "object" && !Array.isArray(entry[1])) {
         counter = goIntoLayer(entry[1], ++counter, 1);
       }
     }
@@ -154,6 +154,7 @@ export class Reader {
     }
     return false;
   }
+  
   //returns a key or group of keys from a inputting a specific value. Amount is the number of keys looking to get
   //Example someReader.getKey('hello', 2): would return an array of two keys if so many existed, else would return just one or none if none existed.
   getKey(value, amount = 1) {
@@ -165,6 +166,14 @@ export class Reader {
     const goIntoLayer = (object) => {
       let entries = Object.entries(object);
       for (let entry of entries) {
+        if(Array.isArray(entry[1])){
+          for(let i of entry[1]){
+            if(i === value){
+              resultingKey.push(entry[0]);
+              ++matchAmount;
+            }
+          }
+        }
         if (entry[1] === value) {
           resultingKey.push(entry[0]);
           ++matchAmount;
@@ -185,6 +194,14 @@ export class Reader {
     let matchAmount = 0;
     //for main/1st layer
     for (let entry of entries) {
+      if(Array.isArray(entry[1])){
+        for(let i of entry[1]){
+          if(i === value){
+            resultingKey.push(entry[0]);
+            ++matchAmount;
+          }
+        }
+      }
       if (matchAmount === amount) return resultingKey;
       if (entry[1] === value) {
           resultingKey.push(entry[0]);
@@ -202,6 +219,7 @@ export class Reader {
       ? "Associated Value has no key"
       : resultingKey;
   }
+
   //gets value/values based on input key and number to return. Deafults to one.
   getValue(key, amount = 1) {
     if (arguments.length > 2) throw new Error("Exceeded argument limit");
@@ -277,9 +295,6 @@ export class Reader {
       if (entry[0] === key) {
         result.key = entry[1];
         return result;
-      }
-
-      if (entry[1] === "object") {
       }
     }
 
